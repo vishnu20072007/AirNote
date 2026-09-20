@@ -1,0 +1,22 @@
+{
+    "camera_width": 1280,
+    "camera_height": 720,
+    "points": {
+        "top_left": [
+            162,
+            92
+        ],
+        "top_right": [
+            1115,
+            95
+        ],
+        "bottom_right": [
+            1118,
+            625
+        ],
+        "bottom_left": [
+            167,
+            625
+        ]
+    }
+}
