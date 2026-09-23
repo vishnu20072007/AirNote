@@ -3,36 +3,20 @@ import "./App.css";
 
 import Login from "./Login";
 import Signup from "./Signup";
-import Workspace from "./Workspace";
 
 function App() {
   const [page, setPage] = useState("landing");
 
-  // Check whether the user is already logged in
+  // Check whether user is already logged in
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("airnoteLoggedIn") === "true"
   );
 
-  // Login-required popup
+  // Login required popup
   const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   // =========================
-  // WORKSPACE
-  // =========================
-  if (page === "workspace") {
-    return (
-      <Workspace
-        onLogout={() => {
-          localStorage.removeItem("airnoteLoggedIn");
-          setIsLoggedIn(false);
-          setPage("landing");
-        }}
-      />
-    );
-  }
-
-  // =========================
-  // LOGIN
+  // LOGIN PAGE
   // =========================
   if (page === "login") {
     return (
@@ -40,20 +24,19 @@ function App() {
         onSignup={() => setPage("signup")}
         onBack={() => setPage("landing")}
         onLoginSuccess={() => {
-          // Save login state
           localStorage.setItem("airnoteLoggedIn", "true");
-
           setIsLoggedIn(true);
 
-          // Go to workspace after successful login
-          setPage("workspace");
+          // After login, return to landing page for now.
+          // Workspace will be connected later.
+          setPage("landing");
         }}
       />
     );
   }
 
   // =========================
-  // SIGNUP
+  // SIGNUP PAGE
   // =========================
   if (page === "signup") {
     return (
@@ -68,10 +51,9 @@ function App() {
   // =========================
   const handleStartWriting = () => {
     if (isLoggedIn) {
-      // Already logged in → directly open workspace
-      setPage("workspace");
+      // Workspace will be connected here later.
+      alert("You are logged in. Workspace will be connected here.");
     } else {
-      // Not logged in → show popup
       setShowLoginPopup(true);
     }
   };
@@ -168,9 +150,7 @@ function App() {
             </p>
 
 
-            {/* =========================
-                HERO BUTTONS
-            ========================= */}
+            {/* HERO BUTTONS */}
             <div className="hero-buttons">
 
               {/* START WRITING */}
@@ -195,9 +175,7 @@ function App() {
                 href="#features"
                 className="secondary-button"
               >
-
                 Explore AirNote
-
               </a>
 
             </div>
@@ -254,7 +232,6 @@ function App() {
                     CAM
                   </div>
 
-
                   <div>
 
                     <strong>
@@ -310,7 +287,6 @@ function App() {
                   <div className="save-icon">
                     OK
                   </div>
-
 
                   <div>
 
@@ -457,37 +433,30 @@ function App() {
       </main>
 
 
-      {/* =================================================
+      {/* =========================
           LOGIN REQUIRED POPUP
-      ================================================= */}
+      ========================= */}
       {showLoginPopup && (
 
         <div className="login-popup-overlay">
 
           <div className="login-popup">
 
-            {/* ICON */}
-
             <div className="popup-icon">
               A
             </div>
 
 
-            {/* TITLE */}
-
             <h2>
-              Login required
+              Please log in first
             </h2>
 
 
-            {/* MESSAGE */}
-
             <p>
-              Please login first to start writing with AirNote.
+              You need to log in before you can start writing
+              with AirNote.
             </p>
 
-
-            {/* BUTTONS */}
 
             <div className="popup-actions">
 
