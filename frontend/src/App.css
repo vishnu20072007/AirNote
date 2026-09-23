@@ -1,0 +1,365 @@
+/* =========================
+   RESET
+========================= */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, Arial, sans-serif;
+  background: #0d0f16;
+  color: #f5f5f5;
+}
+
+/* =========================
+   MAIN APP
+========================= */
+
+.app {
+  min-height: 100vh;
+  padding: 50px 7%;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(99, 102, 241, 0.12),
+      transparent 35%
+    ),
+    #0d0f16;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+  margin-bottom: 45px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 58px;
+  font-weight: 800;
+  letter-spacing: -2px;
+}
+
+.header p {
+  margin-top: 10px;
+  font-size: 20px;
+  color: #9ca3af;
+}
+
+/* =========================
+   CAMERA SECTION
+========================= */
+
+.camera-section {
+  width: 100%;
+  max-width: 1250px;
+  margin: auto;
+}
+
+/* =========================
+   TITLE
+========================= */
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-title h2 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.section-title p {
+  margin: 7px 0 0;
+  color: #9ca3af;
+  font-size: 16px;
+}
+
+/* =========================
+   CAMERA STATUS
+========================= */
+
+.camera-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 16px;
+
+  border: 1px solid #2b3040;
+  border-radius: 30px;
+
+  background: #171a25;
+
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+
+  border-radius: 50%;
+
+  background: #6b7280;
+}
+
+.status-dot.active {
+  background: #22c55e;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.7);
+}
+
+/* =========================
+   CAMERA CONTAINER
+========================= */
+
+.camera-container {
+  position: relative;
+
+  width: 100%;
+  aspect-ratio: 16 / 9;
+
+  overflow: hidden;
+
+  border-radius: 22px;
+
+  border: 1px solid #303544;
+
+  background: #090b10;
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.35);
+}
+
+/* =========================
+   VIDEO
+========================= */
+
+.camera-video {
+  display: none;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transform: scaleX(-1);
+
+  background: #000;
+}
+
+.camera-video.visible {
+  display: block;
+}
+
+/* =========================
+   CAMERA PLACEHOLDER
+========================= */
+
+.camera-placeholder {
+  position: absolute;
+
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+}
+
+.camera-icon {
+  font-size: 60px;
+  margin-bottom: 15px;
+}
+
+.camera-placeholder h3 {
+  margin: 0;
+
+  font-size: 26px;
+}
+
+.camera-placeholder p {
+  margin: 10px 0 25px;
+
+  color: #9ca3af;
+}
+
+/* =========================
+   START CAMERA BUTTON
+========================= */
+
+.camera-btn {
+  border: none;
+
+  padding: 14px 25px;
+
+  border-radius: 12px;
+
+  background: #6366f1;
+  color: white;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.camera-btn:hover {
+  background: #7477ff;
+  transform: translateY(-2px);
+}
+
+/* =========================
+   TRACKING OVERLAY
+========================= */
+
+.tracking-overlay {
+  position: absolute;
+
+  top: 18px;
+  left: 18px;
+
+  padding: 8px 13px;
+
+  border-radius: 10px;
+
+  background: rgba(10, 12, 18, 0.75);
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  backdrop-filter: blur(8px);
+}
+
+.tracking-text {
+  font-size: 13px;
+  color: #d1d5db;
+}
+
+/* =========================
+   STOP CAMERA
+========================= */
+
+.stop-camera-btn {
+  margin-top: 18px;
+
+  padding: 11px 20px;
+
+  border: 1px solid #3b4050;
+
+  border-radius: 10px;
+
+  background: #181b26;
+
+  color: #f87171;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.stop-camera-btn:hover {
+  background: #222633;
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.camera-error {
+  margin-top: 15px;
+
+  padding: 13px 16px;
+
+  border-radius: 10px;
+
+  background: rgba(239, 68, 68, 0.1);
+
+  border: 1px solid rgba(239, 68, 68, 0.3);
+
+  color: #fca5a5;
+}
+
+/* =========================
+   NEXT STEP
+========================= */
+
+.next-step {
+  max-width: 1250px;
+
+  margin: 35px auto 0;
+
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  padding: 22px;
+
+  border-radius: 16px;
+
+  background: #141722;
+
+  border: 1px solid #292e3c;
+}
+
+.next-icon {
+  width: 50px;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: #20243a;
+
+  font-size: 25px;
+}
+
+.next-step h3 {
+  margin: 0 0 5px;
+
+  font-size: 18px;
+}
+
+.next-step p {
+  margin: 0;
+
+  color: #9ca3af;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 700px) {
+  .app {
+    padding: 30px 5%;
+  }
+
+  .header h1 {
+    font-size: 42px;
+  }
+
+  .section-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .camera-status {
+    align-self: flex-start;
+  }
+}
