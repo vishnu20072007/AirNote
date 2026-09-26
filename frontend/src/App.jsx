@@ -3,17 +3,51 @@ import "./App.css";
 
 import Login from "./Login";
 import Signup from "./Signup";
+import Workspace from "./Workspace";
 
 function App() {
-  const [page, setPage] = useState("landing");
-
-  // Check whether user is already logged in
+  // =========================
+  // LOGIN STATE
+  // =========================
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("airnoteLoggedIn") === "true"
   );
 
-  // Login required popup
+  // =========================
+  // PAGE STATE
+  // =========================
+  const [page, setPage] = useState("landing");
+
+  // =========================
+  // LOGIN POPUP
+  // =========================
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+
+  // =========================
+  // START WRITING
+  // =========================
+  const handleStartWriting = () => {
+    if (isLoggedIn) {
+      setPage("workspace");
+    } else {
+      setShowLoginPopup(true);
+    }
+  };
+
+  // =========================
+  // WORKSPACE
+  // =========================
+  if (page === "workspace") {
+    return (
+      <Workspace
+        onLogout={() => {
+          localStorage.removeItem("airnoteLoggedIn");
+          setIsLoggedIn(false);
+          setPage("landing");
+        }}
+      />
+    );
+  }
 
   // =========================
   // LOGIN PAGE
@@ -27,9 +61,8 @@ function App() {
           localStorage.setItem("airnoteLoggedIn", "true");
           setIsLoggedIn(true);
 
-          // After login, return to landing page for now.
-          // Workspace will be connected later.
-          setPage("landing");
+          // After successful login → workspace
+          setPage("workspace");
         }}
       />
     );
@@ -47,18 +80,6 @@ function App() {
   }
 
   // =========================
-  // START WRITING
-  // =========================
-  const handleStartWriting = () => {
-    if (isLoggedIn) {
-      // Workspace will be connected here later.
-      alert("You are logged in. Workspace will be connected here.");
-    } else {
-      setShowLoginPopup(true);
-    }
-  };
-
-  // =========================
   // LANDING PAGE
   // =========================
   return (
@@ -74,13 +95,8 @@ function App() {
           onClick={() => setPage("landing")}
           style={{ cursor: "pointer" }}
         >
-          <div className="brand-logo">
-            A
-          </div>
-
-          <span>
-            AirNote
-          </span>
+          <div className="brand-logo">A</div>
+          <span>AirNote</span>
         </div>
 
         <nav className="nav-links">
@@ -104,73 +120,47 @@ function App() {
 
       </header>
 
-
       {/* =========================
-          MAIN
+          HERO
       ========================= */}
       <main>
 
-        {/* =========================
-            HERO
-        ========================= */}
         <section className="hero-section">
 
           <div className="hero-left">
 
             <div className="hero-badge">
-
               <span className="badge-dot"></span>
-
               Write beyond the screen
-
             </div>
 
-
             <h1>
-
               Turn your hand
-
               <br />
-
-              into{" "}
-
+              into a{" "}
               <span className="gradient-text">
                 pen.
               </span>
-
             </h1>
 
-
             <p className="hero-description">
-
               AirNote transforms your hand movements into digital
               writing. Create, draw, save and bring your ideas to life
               without touching the screen.
-
             </p>
 
-
-            {/* HERO BUTTONS */}
             <div className="hero-buttons">
 
               {/* START WRITING */}
-
               <button
                 className="primary-button"
                 onClick={handleStartWriting}
               >
-
                 Start Writing
-
-                <span>
-                  →
-                </span>
-
+                <span>→</span>
               </button>
 
-
               {/* EXPLORE */}
-
               <a
                 href="#features"
                 className="secondary-button"
@@ -180,15 +170,11 @@ function App() {
 
             </div>
 
-
             <p className="powered-text">
-
               * Powered by computer vision
-
             </p>
 
           </div>
-
 
           {/* =========================
               HERO CANVAS PREVIEW
@@ -200,29 +186,21 @@ function App() {
               <div className="canvas-topbar">
 
                 <div className="window-dots">
-
                   <span></span>
                   <span></span>
                   <span></span>
-
                 </div>
-
 
                 <strong>
                   AirNote Canvas
                 </strong>
 
-
                 <div className="live-status">
-
                   <span></span>
-
                   LIVE
-
                 </div>
 
               </div>
-
 
               <div className="canvas-area">
 
@@ -233,7 +211,6 @@ function App() {
                   </div>
 
                   <div>
-
                     <strong>
                       Camera Input
                     </strong>
@@ -241,18 +218,15 @@ function App() {
                     <small>
                       Ready to capture
                     </small>
-
                   </div>
 
                 </div>
-
 
                 <svg
                   className="drawing-line"
                   viewBox="0 0 700 300"
                   preserveAspectRatio="none"
                 >
-
                   <path
                     d="
                       M70 190
@@ -262,12 +236,9 @@ function App() {
                       C520 25, 575 50, 635 135
                     "
                   />
-
                 </svg>
 
-
                 <div className="cursor-dot"></div>
-
 
                 <div className="pinch-card">
 
@@ -281,7 +252,6 @@ function App() {
 
                 </div>
 
-
                 <div className="autosave-card">
 
                   <div className="save-icon">
@@ -289,7 +259,6 @@ function App() {
                   </div>
 
                   <div>
-
                     <strong>
                       Auto saved
                     </strong>
@@ -297,13 +266,11 @@ function App() {
                     <small>
                       Just now
                     </small>
-
                   </div>
 
                 </div>
 
               </div>
-
 
               <div className="canvas-footer">
 
@@ -322,7 +289,6 @@ function App() {
           </div>
 
         </section>
-
 
         {/* =========================
             FEATURES
@@ -348,7 +314,6 @@ function App() {
 
           </div>
 
-
           <div className="feature-card">
 
             <span className="feature-number">
@@ -364,7 +329,6 @@ function App() {
             </p>
 
           </div>
-
 
           <div className="feature-card">
 
@@ -384,7 +348,6 @@ function App() {
 
         </section>
 
-
         {/* =========================
             ABOUT
         ========================= */}
@@ -399,31 +362,22 @@ function App() {
               ABOUT AIRNOTE
             </span>
 
-
             <h2>
-
               Your hands.
-
               <br />
-
               Your ideas.
-
               <br />
 
               <span className="gradient-text">
                 No screen required.
               </span>
-
             </h2>
 
-
             <p>
-
               AirNote uses computer vision to understand your
               hand movements and transform them into digital
               strokes. It gives you a natural way to write and
               create without physically touching your screen.
-
             </p>
 
           </div>
@@ -432,12 +386,10 @@ function App() {
 
       </main>
 
-
       {/* =========================
           LOGIN REQUIRED POPUP
       ========================= */}
       {showLoginPopup && (
-
         <div className="login-popup-overlay">
 
           <div className="login-popup">
@@ -446,17 +398,13 @@ function App() {
               A
             </div>
 
-
             <h2>
-              Please log in first
+              Login required
             </h2>
 
-
             <p>
-              You need to log in before you can start writing
-              with AirNote.
+              Please log in first to start writing with AirNote.
             </p>
-
 
             <div className="popup-actions">
 
@@ -467,7 +415,6 @@ function App() {
                 Cancel
               </button>
 
-
               <button
                 className="popup-login"
                 onClick={() => {
@@ -475,7 +422,7 @@ function App() {
                   setPage("login");
                 }}
               >
-                Go to Login
+                Log in
               </button>
 
             </div>
@@ -483,7 +430,6 @@ function App() {
           </div>
 
         </div>
-
       )}
 
     </div>
