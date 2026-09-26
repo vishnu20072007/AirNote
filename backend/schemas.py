@@ -13,3 +13,8 @@ class DrawingResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class DrawingUpdate(BaseModel):
+    name: str
+    stroke_data: str

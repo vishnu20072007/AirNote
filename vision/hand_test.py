@@ -1,123 +1,197 @@
 import cv2
 import mediapipe as mp
-import time
 
-# MediaPipe setup
-BaseOptions = mp.tasks.BaseOptions
-HandLandmarker = mp.tasks.vision.HandLandmarker
-HandLandmarkerOptions = mp.tasks.vision.HandLandmarkerOptions
-VisionRunningMode = mp.tasks.vision.RunningMode
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
 
-# Configure the hand landmarker
-options = HandLandmarkerOptions(
-    base_options=BaseOptions(
-        model_asset_path="vision/models/hand_landmarker.task"
-    ),
-    running_mode=VisionRunningMode.VIDEO,
-    num_hands=2,
+
+# =========================
+# MODEL PATH
+# =========================
+
+MODEL_PATH = "vision/models/hand_landmarker.task"
+
+
+# =========================
+# MEDIAPIPE HAND LANDMARKER
+# =========================
+
+base_options = python.BaseOptions(
+    model_asset_path=MODEL_PATH
+)
+
+options = vision.HandLandmarkerOptions(
+    base_options=base_options,
+    running_mode=vision.RunningMode.IMAGE,
+    num_hands=1,
     min_hand_detection_confidence=0.5,
     min_hand_presence_confidence=0.5,
     min_tracking_confidence=0.5,
 )
 
-# Start webcam
-camera = cv2.VideoCapture(0)
+detector = vision.HandLandmarker.create_from_options(
+    options
+)
 
-if not camera.isOpened():
-    print("❌ Could not open webcam")
+
+# =========================
+# CAMERA
+# =========================
+
+cap = cv2.VideoCapture(0)
+
+if not cap.isOpened():
+    print("❌ Camera could not be opened")
     exit()
 
-print("✅ Hand tracking started!")
-print("Press Q to close.")
+print("✅ Camera started")
+print("✋ Show your hand")
+print("Press Q to quit")
 
-start_time = time.time()
-frame_count = 0
 
-with HandLandmarker.create_from_options(options) as landmarker:
+# =========================
+# MAIN LOOP
+# =========================
 
-    while True:
-        success, frame = camera.read()
+while True:
 
-        if not success:
-            print("❌ Could not read webcam frame")
-            break
+    success, frame = cap.read()
 
-        # Mirror the webcam
-        frame = cv2.flip(frame, 1)
+    if not success:
+        print("❌ Failed to read camera")
+        break
 
-        # Convert BGR → RGB
-        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    # Mirror camera
+    frame = cv2.flip(frame, 1)
 
-        # Create MediaPipe image
-        mp_image = mp.Image(
-            image_format=mp.ImageFormat.SRGB,
-            data=rgb_frame
+    # OpenCV BGR → RGB
+    rgb_frame = cv2.cvtColor(
+        frame,
+        cv2.COLOR_BGR2RGB
+    )
+
+    # MediaPipe Image
+    mp_image = mp.Image(
+        image_format=mp.ImageFormat.SRGB,
+        data=rgb_frame
+    )
+
+    # Detect hand
+    result = detector.detect(mp_image)
+
+
+    # =========================
+    # HAND DETECTED
+    # =========================
+
+    if result.hand_landmarks:
+
+        for hand_landmarks in result.hand_landmarks:
+
+            # Draw all landmarks
+            for landmark in hand_landmarks:
+
+                h, w, _ = frame.shape
+
+                x = int(landmark.x * w)
+                y = int(landmark.y * h)
+
+                cv2.circle(
+                    frame,
+                    (x, y),
+                    5,
+                    (0, 255, 0),
+                    -1
+                )
+
+
+            # =========================
+            # INDEX FINGER TIP
+            # Landmark 8
+            # =========================
+
+            index_tip = hand_landmarks[8]
+
+            h, w, _ = frame.shape
+
+            index_x = int(
+                index_tip.x * w
+            )
+
+            index_y = int(
+                index_tip.y * h
+            )
+
+
+            # Highlight index finger
+            cv2.circle(
+                frame,
+                (index_x, index_y),
+                12,
+                (0, 255, 255),
+                -1
+            )
+
+
+            # Show coordinates
+            cv2.putText(
+                frame,
+                f"Index: ({index_x}, {index_y})",
+                (20, 50),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.8,
+                (0, 255, 255),
+                2
+            )
+
+
+            # Hand detected text
+            cv2.putText(
+                frame,
+                "HAND DETECTED",
+                (20, 90),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.8,
+                (0, 255, 0),
+                2
+            )
+
+    else:
+
+        cv2.putText(
+            frame,
+            "NO HAND DETECTED",
+            (20, 50),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.8,
+            (0, 0, 255),
+            2
         )
 
-        # Create increasing timestamp
-        timestamp_ms = int(
-            (time.time() - start_time) * 1000
-        )
 
-        # Detect hands
-        results = landmarker.detect_for_video(
-            mp_image,
-            timestamp_ms
-        )
+    # =========================
+    # SHOW CAMERA
+    # =========================
 
-        # Draw detected landmarks
-        if results.hand_landmarks:
-            for hand in results.hand_landmarks:
+    cv2.imshow(
+        "AirNote - Hand Tracking",
+        frame
+    )
 
-                # Draw points
-                for landmark in hand:
-                    x = int(landmark.x * frame.shape[1])
-                    y = int(landmark.y * frame.shape[0])
 
-                    cv2.circle(
-                        frame,
-                        (x, y),
-                        5,
-                        (0, 255, 0),
-                        -1
-                    )
+    # Q = quit
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
 
-                # Draw connections
-                connections = [
-                    (0, 1), (1, 2), (2, 3), (3, 4),
-                    (0, 5), (5, 6), (6, 7), (7, 8),
-                    (0, 9), (9, 10), (10, 11), (11, 12),
-                    (0, 13), (13, 14), (14, 15), (15, 16),
-                    (0, 17), (17, 18), (18, 19), (19, 20),
-                    (5, 9), (9, 13), (13, 17), (0, 17)
-                ]
 
-                for start, end in connections:
-                    x1 = int(hand[start].x * frame.shape[1])
-                    y1 = int(hand[start].y * frame.shape[0])
+# =========================
+# CLEANUP
+# =========================
 
-                    x2 = int(hand[end].x * frame.shape[1])
-                    y2 = int(hand[end].y * frame.shape[0])
+cap.release()
 
-                    cv2.line(
-                        frame,
-                        (x1, y1),
-                        (x2, y2),
-                        (0, 255, 0),
-                        2
-                    )
-
-        cv2.imshow(
-            "AirNote - Hand Tracking Test",
-            frame
-        )
-
-        frame_count += 1
-
-        if cv2.waitKey(1) & 0xFF == ord("q"):
-            break
-
-camera.release()
 cv2.destroyAllWindows()
 
-print("✅ Hand tracking test finished.")
+detector.close()
+
+print("Camera stopped.")
